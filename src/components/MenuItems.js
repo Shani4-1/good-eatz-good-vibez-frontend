@@ -4,7 +4,6 @@ import MenuItem from "./MenuItem";
 const MenuItems = ({ menuOptions }) => {
   const [searchInput, setSearchInput] = useState("");
   const [sortCategory, setSortCategory] = useState("");
-  const [sortByPrice, setSortByPrice] = useState(false);
   const [toggle, setToggle] = useState(true);
 
   const handleChange = (e) => {
@@ -19,9 +18,6 @@ const MenuItems = ({ menuOptions }) => {
     setToggle(!toggle);
   };
 
-  const toggleSortByPrice = () => {
-    setSortByPrice(!sortByPrice);
-  };
   const matchesSearchInput = (item_name) => {
     return item_name.toLowerCase().includes(searchInput);
   };
@@ -39,14 +35,8 @@ const MenuItems = ({ menuOptions }) => {
 
   const sortOptions = (options) => {
     return options.sort((a, b) => {
-      let aVal, bVal;
-      if (sortByPrice) {
-        aVal = Number(a.price);
-        bVal = Number(b.price);
-      } else {
-        aVal = a.category;
-        bVal = b.category;
-      }
+      const aVal = Number(a.price);
+      const bVal = Number(b.price);
 
       if (aVal < bVal) {
         return toggle ? -1 : 1;
@@ -61,17 +51,9 @@ const MenuItems = ({ menuOptions }) => {
   const filteredOptions = filterOptions();
   const sortedOptions = sortOptions(filteredOptions);
   const renderContent = () => {
-    if (!sortedOptions.length) {
-      return (
-        <div className='NoContent'>
-          No menu options to display for {searchInput}
-        </div>
-      );
-    } else {
-      return sortedOptions.map((option) => (
-        <MenuItem key={option.id} option={option} />
-      ));
-    }
+    return sortedOptions.map((option) => (
+      <MenuItem key={option.id} option={option} />
+    ));
   };
 
   return (
@@ -99,11 +81,14 @@ const MenuItems = ({ menuOptions }) => {
         <button className='toggle' onClick={toggleIsActive}>
           {toggle ? "Ascending ⬆️" : "Decending ⬇️"}
         </button>
-        <button className="toggle" onClick={toggleSortByPrice}>
-            {sortByPrice ? "Sort by Category" : "Sort by Price"}
-        </button>
       </div>
-      <div className='MenuItem_content'>{renderContent()}</div>
+      <div className='MenuItem_content'>
+        {sortedOptions.length ? (
+          renderContent()
+        ) : (
+          <div>No menu options to display for {searchInput}</div>
+        )}
+      </div>
     </section>
   );
 };
