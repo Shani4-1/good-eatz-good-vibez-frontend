@@ -8,7 +8,7 @@ const MenuItem = ({ option }) => {
       </div>
       <div className='MenuItem_info'>
         <h1>{item_name}</h1>
-        <p>Price: {price}</p>
+        <p>Price: ${price}.00</p>
         <p>Description: {description}</p>
         <p>Category: {category}</p>
       </div>
